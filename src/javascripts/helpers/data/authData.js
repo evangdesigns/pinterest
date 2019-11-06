@@ -7,7 +7,7 @@ const authDiv = $('#auth');
 const boardsDiv = $('#boards');
 const logoutNavBar = $('#logOut');
 
-const checkLoginStaus = () => {
+const checkLoginStatus = () => {
   firebase.auth().onAuthStateChanged((user) => {
     if (user) {
       homeDiv.addClass('hide');
@@ -23,4 +23,4 @@ const checkLoginStaus = () => {
   });
 };
 
-export default { checkLoginStaus };
+export default { checkLoginStatus };
