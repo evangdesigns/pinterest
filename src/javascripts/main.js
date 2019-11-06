@@ -4,10 +4,12 @@ import auth from './components/Auth/auth';
 import authData from './helpers/data/authData';
 import naveyOut from './components/navey/navey';
 import homePage from './components/home/home';
+import boardsPage from './components/boards/boards';
 import '../styles/main.scss';
 
 const init = () => {
   homePage.printHome();
+  boardsPage.printBoards();
   firebase.initializeApp(apiKeys.firebaseKeys);
   authData.checkLoginStaus();
   auth.loginButton();
