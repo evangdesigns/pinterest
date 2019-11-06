@@ -11,7 +11,7 @@ const init = () => {
   homePage.printHome();
   boardsPage.printBoards();
   firebase.initializeApp(apiKeys.firebaseKeys);
-  authData.checkLoginStaus();
+  authData.checkLoginStatus();
   auth.loginButton();
   naveyOut.logoutEvent();
 };
