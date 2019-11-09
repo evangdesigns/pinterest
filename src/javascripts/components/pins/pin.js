@@ -6,14 +6,13 @@ const pinCard = (pins) => {
   <div class="card col-4">
     <div class="card-body">
     <h3 class="card-title text-center">${pins.name}</h3>
-    <a href="${pins.url}" target="_blank">
       <img src=${pins.imageUrl} class="card-img-top" alt="${pins.name}">
     </div>
     <div class="card-footer">
-      <center>
-        <button type="submit" class="btn btn-danger btn-block" formaction="" id="${pins.id}">VIEW</button>
+      <center id="${pins.boardId}">
+        <a href="${pins.url}" class="btn btn-danger btn-block" target="_blank" id="${pins.id}">VIEW</a>
+        <button class="btn btn-link delete-pin" id="${pins.id}">Delete Pin</button>
       </center>
-      </a>
     </div>
   </div>`;
   return domString;
