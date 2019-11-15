@@ -1,4 +1,6 @@
 import $ from 'jquery';
+import firebase from 'firebase/app';
+import 'firebase/auth';
 import utilities from '../../helpers/utilities';
 import boards from '../../helpers/data/boardsData';
 import pinData from '../../helpers/data/pinData';
@@ -22,8 +24,10 @@ const deleteBoard = (e) => {
             pinData.deletePin(p.id);
           });
         });
-      // eslint-disable-next-line no-use-before-define
-      printBoards();
+      firebase.auth().onAuthStateChanged((user) => {
+        // eslint-disable-next-line no-use-before-define
+        printBoards(user.uid);
+      });
     })
     .catch((error) => console.error(error));
 };
