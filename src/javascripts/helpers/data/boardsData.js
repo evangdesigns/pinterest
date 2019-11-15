@@ -3,8 +3,8 @@ import apiKeys from '../apiKeys.json';
 
 const baseUrl = apiKeys.firebaseKeys.databaseURL;
 
-const getBoards = () => new Promise((resolve, reject) => {
-  axios.get(`${baseUrl}/boards.json`)
+const getBoards = (uid) => new Promise((resolve, reject) => {
+  axios.get(`${baseUrl}/boards.json?orderBy="uid"&equalTo="${uid}"`)
     .then((response) => {
       const demBoards = response.data;
       const boards = [];
@@ -17,4 +17,20 @@ const getBoards = () => new Promise((resolve, reject) => {
     .catch((error) => reject(error));
 });
 
-export default { getBoards };
+const boardsBtId = (boardId) => new Promise((resolve, reject) => {
+  axios.get(`${baseUrl}/boards.json?orderBy="boardId"&equalTo="${boardId}"`)
+    .then((response) => {
+      const demBoards = response.data;
+      const boards = [];
+      Object.keys(demBoards).forEach((fbId) => {
+        demBoards[fbId].id = fbId;
+        boards.push(demBoards[fbId]);
+      });
+      resolve(boards);
+    })
+    .catch((error) => reject(error));
+});
+
+const deleteBoard = (boardId) => axios.delete(`${baseUrl}/boards/${boardId}.json`);
+
+export default { getBoards, boardsBtId, deleteBoard };
