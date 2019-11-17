@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import pin from '../pins/pin';
 import pinData from '../../helpers/data/pinData';
+import boardData from '../../helpers/data/boardsData';
 import utilities from '../../helpers/utilities';
 import './board.scss';
 
@@ -26,8 +27,7 @@ const addPin = (e) => {
 };
 
 const pinModal = (boardId) => {
-  const bId = boardId;
-  const title = `Add A Pin to ${bId}`;
+  const title = `Add A Pin to ${boardId}`;
   const body = `<form>
     <div class="form-group">
       <label for="boardName">Board Name</label>
@@ -42,9 +42,45 @@ const pinModal = (boardId) => {
       <input type="text" class="form-control" id="pinLink" placeholder="Enter Pin Link">
     </div>
   </form>
-  <button type="button" class="btn btn-danger add-new-pin" id="${bId}">ADD PIN</button>`;
+  <button type="button" class="btn btn-danger add-new-pin" id="${boardId}">ADD PIN</button>`;
   utilities.printModal(title, body);
-  $(`#${bId}`).click(addPin);
+  $(`#${boardId}`).click(addPin);
+};
+
+const switchPin = (e) => {
+  e.stopImmediatePropagation();
+  const pinId = e.target.id;
+  const newBoard = {
+    boardId: $('#boardId').val(),
+    pinId,
+  };
+  pinData.switchBoard(pinId, newBoard)
+    .then(() => {
+      $('#uniModal').modal('hide');
+      // eslint-disable-next-line no-use-before-define
+      buildBoard();
+    })
+    .catch((error) => console.error(error));
+};
+
+const boardSwitchModal = (pinId) => {
+  const title = 'Move Boards';
+  let body = `<form>
+  <div class="form-group">
+  <label for="boardId">Select Board</label>
+  <select class="form-control" id="boardId">`;
+  boardData.getBoards()
+    .then((boards) => {
+      boards.forEach((x) => {
+        body += `<option>${x.boardName}</option>`;
+      });
+    }).catch((error) => console.error(error));
+  body += `</select>
+    </div>
+  </form>
+  <button type="button" class="btn btn-danger move-to-board" id="${pinId}">MOVE TO BOARD</button>`;
+  utilities.printModal(title, body);
+  $(`#${pinId}`).click(pinData.switchBoard);
 };
 
 const deleteFromBoard = (e) => {
@@ -78,7 +114,9 @@ const buildBoard = (boardId) => {
       domString += '</div>';
       utilities.printToDom('board', domString);
       $('#board').on('click', '.delete-pin', deleteFromBoard);
+      $('#board').on('click', '.move-pin', switchPin);
       $('#add-pin').click(pinModal(boardId));
+      $('#move-pin').click(boardSwitchModal(boardId.pinId));
     })
     .catch((error) => console.error(error));
 };

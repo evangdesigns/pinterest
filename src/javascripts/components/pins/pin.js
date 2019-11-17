@@ -11,7 +11,7 @@ const pinCard = (pins) => {
     <div class="card-footer">
       <center id="${pins.boardId}">
         <a href="${pins.url}" class="btn btn-danger btn-block" target="_blank" id="${pins.id}">VIEW</a>
-        <button class="btn btn-link delete-pin" id="${pins.id}">Delete Pin</button>
+        <button class="btn btn-link move-pin" id="move-${pins.id}">Move Pin</button> | <button class="btn btn-link delete-pin" id="${pins.id}">Delete Pin</button>
       </center>
     </div>
   </div>`;
