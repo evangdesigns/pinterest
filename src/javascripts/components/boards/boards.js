@@ -23,17 +23,48 @@ const addBoard = (e) => {
     .catch((error) => console.error(error));
 };
 
-const boardModal = () => {
-  const title = 'Add Board';
+const updateBoard = (e) => {
+  const boardId = e.target.id.split('update-')[1];
+  const { uid } = firebase.auth().currentUser;
+  const updatedBoard = {
+    name: $('#boardName').val(),
+    uid,
+  };
+  boardData.updateBoard(boardId, updatedBoard)
+    .then(() => {
+      $('#uniModal').modal('hide');
+      // eslint-disable-next-line no-use-before-define
+      printBoards(uid);
+    })
+    .catch((error) => console.error(error));
+};
+
+const boardModal = (x, id) => {
+  const title = `${x ? 'Update' : 'Add'} Board`;
   const body = `<form>
     <div class="form-group">
       <label for="boardName">Board Name</label>
-      <input type="text" class="form-control" id="boardName" placeholder="Enter Board Name">
+      <input value="${x.name ? x.name : ''}" type="text" class="form-control" id="boardName" placeholder="Enter Board Name">
     </div>
-  </form>
-  <button type="button" class="btn btn-danger add-new-board" id="add-board">ADD BOARD</button>`;
+    <button type="button" class="btn btn-danger btn-block save-board" id="${x ? 'update' : 'add'}-${id}">SAVE</button>
+    </form>`;
   utilities.printModal(title, body);
-  $('#add-board').click(addBoard);
+  $('#uniModal').modal('show');
+  $('#add-undefined').click('.save-board', addBoard);
+  $(`#update-${id}`).click('.save-board', updateBoard);
+};
+
+const checkAction = (e) => {
+  const id = e.target.id.split('update')[1];
+  if (id) {
+    boardData.editBoard(id)
+      .then((x) => {
+        boardModal(x, id);
+      })
+      .catch((error) => console.error(error));
+  } else {
+    boardModal(0);
+  }
 };
 
 const goToBoard = (e) => {
@@ -71,14 +102,15 @@ const printBoards = (uid) => {
         domString += `<div class="card col-4">
         <h3 class="text-center">${board.name}</h3>
         <button type="button" class="btn btn-danger view-board" id="view-${board.id}">VIEW BOARD</button>
-        <button type="link" class="btn btn-link delete-board" id="delete-${board.id}">DELETE BOARD</button>
+        <p class="text-center"><a href="#" class="update-board" id="update${board.id}">UPDATE BOARD</a> | <a href="#" class="delete-board" id="delete-${board.id}">DELETE BOARD</a></p>
         </div>`;
       });
       domString += '</div>';
       utilities.printToDom('boards', domString);
       $('#boards').on('click', '.view-board', goToBoard);
       $('#boards').on('click', '.delete-board', deleteBoard);
-      $('#add-board').click(boardModal);
+      $('#boards').on('click', '.update-board', checkAction);
+      $('#add-board').click(checkAction);
     })
     .catch((error) => console.error(error));
 };
