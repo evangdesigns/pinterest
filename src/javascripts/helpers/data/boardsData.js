@@ -17,19 +17,15 @@ const getBoards = (uid) => new Promise((resolve, reject) => {
     .catch((error) => reject(error));
 });
 
-const boardsById = (boardId) => new Promise((resolve, reject) => {
-  axios.get(`${baseUrl}/boards.json?orderBy="boardId"&equalTo="${boardId}"`)
-    .then((response) => {
-      const demBoards = response.data;
-      const boards = [];
-      Object.keys(demBoards).forEach((fbId) => {
-        demBoards[fbId].id = fbId;
-        boards.push(demBoards[fbId]);
-      });
-      resolve(boards);
-    })
-    .catch((error) => reject(error));
-});
+// const getBoardsByName = () => new Promise((resolve, reject) => {
+//   axios.get(`${baseUrl}/boards.json?orderBy="name"`)
+//     .then((response) => {
+//       const boardNames = response.data;
+//       console.log(boardNames);
+//       resolve(boardNames);
+//     })
+//     .catch((error) => reject(error));
+// });
 
 const addNewBoard = (newBoard) => axios.post(`${baseUrl}/boards.json`, newBoard);
 
@@ -48,7 +44,6 @@ const editBoard = (boardId) => new Promise((resolve, reject) => {
 
 export default {
   getBoards,
-  boardsById,
   addNewBoard,
   deleteBoard,
   editBoard,
