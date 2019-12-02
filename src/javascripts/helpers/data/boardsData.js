@@ -17,15 +17,7 @@ const getBoards = (uid) => new Promise((resolve, reject) => {
     .catch((error) => reject(error));
 });
 
-// const getBoardsByName = () => new Promise((resolve, reject) => {
-//   axios.get(`${baseUrl}/boards.json?orderBy="name"`)
-//     .then((response) => {
-//       const boardNames = response.data;
-//       console.log(boardNames);
-//       resolve(boardNames);
-//     })
-//     .catch((error) => reject(error));
-// });
+const getBoardById = (boardId) => axios.get(`${baseUrl}/boards/${boardId}.json"`);
 
 const addNewBoard = (newBoard) => axios.post(`${baseUrl}/boards.json`, newBoard);
 
@@ -48,4 +40,5 @@ export default {
   deleteBoard,
   editBoard,
   updateBoard,
+  getBoardById,
 };

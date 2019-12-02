@@ -51,16 +51,16 @@ const pinModal = (boardId) => {
 
 const switchPin = (e) => {
   e.stopImmediatePropagation();
-  const pinId = e.target.id;
+  const pinId = e.target.id.split('switch-')[1];
+  const boardId = $(`#select-${pinId}`).val();
   const newBoard = {
-    boardId: $('#boardId').val(),
-    pinId,
+    boardId,
   };
   pinData.switchBoard(pinId, newBoard)
     .then(() => {
       $('#uniModal').modal('hide');
       // eslint-disable-next-line no-use-before-define
-      buildBoard();
+      buildBoard(boardId);
     })
     .catch((error) => console.error(error));
 };
@@ -106,7 +106,11 @@ const buildBoard = (boardId) => {
   boardsDiv.addClass('hide');
   boardDiv.removeClass('hide');
   boardDiv.add(`#${boardId}`);
-  let domString = `<h1 class="text-center">${boardId}</h1>`;
+  let domString = '';
+  boardData.getBoardById(boardId)
+    .then((x) => {
+      domString += `<h1 class="text-center">${x.name}</h1>`;
+    });
   domString += '<center><button type="link" class="btn btn-link add-pin" data-toggle="modal" data-target="#uniModal" id="add-pin">ADD PIN</button></center>';
   domString += `<center>
       <a href="/"class="btn btn-link go-back-boards">BACK TO BOARDS</a>
