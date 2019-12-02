@@ -23,20 +23,12 @@ const deletePin = (pinId) => axios.delete(`${baseUrl}/pins/${pinId}.json`);
 
 const updatePin = (pinId, updatedPin) => axios.put(`${baseUrl}/pins/${pinId}.json`, updatedPin);
 
-const switchBoard = (pinId, boardId) => new Promise((resolve, reject) => {
-  axios.get(`${baseUrl}/pins/${pinId}.json`)
-    .then((result) => {
-      const pinObject = result.data;
-      pinObject.boardId = boardId;
-      updatePin(pinId, pinObject);
-      resolve();
-    })
-    .catch((error) => reject(error));
-});
+const switchBoard = (pinId, boardId) => axios.patch(`${baseUrl}/pins/${pinId}.json`, boardId);
 
 export default {
   getPins,
   deletePin,
   addNewPin,
+  updatePin,
   switchBoard,
 };

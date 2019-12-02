@@ -1,4 +1,6 @@
 import $ from 'jquery';
+import firebase from 'firebase/app';
+import 'firebase/auth';
 import pin from '../pins/pin';
 import pinData from '../../helpers/data/pinData';
 import boardData from '../../helpers/data/boardsData';
@@ -49,38 +51,43 @@ const pinModal = (boardId) => {
 
 const switchPin = (e) => {
   e.stopImmediatePropagation();
-  const pinId = e.target.id;
+  const pinId = e.target.id.split('switch-')[1];
+  const boardId = $(`#select-${pinId}`).val();
   const newBoard = {
-    boardId: $('#boardId').val(),
-    pinId,
+    boardId,
   };
   pinData.switchBoard(pinId, newBoard)
     .then(() => {
       $('#uniModal').modal('hide');
       // eslint-disable-next-line no-use-before-define
-      buildBoard();
+      buildBoard(boardId);
     })
     .catch((error) => console.error(error));
 };
 
-const boardSwitchModal = (pinId) => {
+const boardSwitchModal = (e) => {
+  const pinId = e.target.id.split('move-')[1];
+  const { uid } = firebase.auth().currentUser;
   const title = 'Move Boards';
-  let body = `<form>
-  <div class="form-group">
-  <label for="boardId">Select Board</label>
-  <select class="form-control" id="boardId">`;
-  boardData.getBoards()
+  boardData.getBoards(uid)
     .then((boards) => {
+      let body = `<form>
+    <div class="form-group">
+    <label for="boardId">Select Board</label>
+    <select class="form-control" id="select-${pinId}">`;
       boards.forEach((x) => {
-        body += `<option>${x.boardName}</option>`;
+        body += `<option value="${x.id}">${x.name}</option>`;
       });
-    }).catch((error) => console.error(error));
-  body += `</select>
-    </div>
-  </form>
-  <button type="button" class="btn btn-danger move-to-board" id="${pinId}">MOVE TO BOARD</button>`;
-  utilities.printModal(title, body);
-  $(`#${pinId}`).click(pinData.switchBoard);
+      body += `</select>
+        </div>
+      </form>
+      <button type="button" class="btn btn-danger move-to-board" id="switch-${pinId}">MOVE TO BOARD</button>`;
+
+      utilities.printModal(title, body);
+      $('#uniModal').modal('show');
+      $(`#switch-${pinId}`).click(switchPin);
+    })
+    .catch((error) => console.error(error));
 };
 
 const deleteFromBoard = (e) => {
@@ -99,7 +106,11 @@ const buildBoard = (boardId) => {
   boardsDiv.addClass('hide');
   boardDiv.removeClass('hide');
   boardDiv.add(`#${boardId}`);
-  let domString = `<h1 class="text-center">${boardId}</h1>`;
+  let domString = '';
+  boardData.getBoardById(boardId)
+    .then((x) => {
+      domString += `<h1 class="text-center">${x.name}</h1>`;
+    });
   domString += '<center><button type="link" class="btn btn-link add-pin" data-toggle="modal" data-target="#uniModal" id="add-pin">ADD PIN</button></center>';
   domString += `<center>
       <a href="/"class="btn btn-link go-back-boards">BACK TO BOARDS</a>
@@ -114,9 +125,8 @@ const buildBoard = (boardId) => {
       domString += '</div>';
       utilities.printToDom('board', domString);
       $('#board').on('click', '.delete-pin', deleteFromBoard);
-      $('#board').on('click', '.move-pin', switchPin);
+      $('#board').on('click', '.move-pin', boardSwitchModal);
       $('#add-pin').click(pinModal(boardId));
-      $('#move-pin').click(boardSwitchModal(boardId.pinId));
     })
     .catch((error) => console.error(error));
 };
