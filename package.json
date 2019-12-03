@@ -1,11 +1,12 @@
 {
-  "name": "pinterest",
+  "name": "pint-e-rest",
   "version": "1.0.0",
   "description": "",
   "main": "src/javasripts/main.js",
   "scripts": {
     "start": "webpack-dev-server --mode development --open",
-    "build": "webpack --mode production --module-bind js=babel-loader"
+    "build": "webpack --mode production --module-bind js=babel-loader",
+    "deploy": "npm run build && firebase deploy"
   },
   "repository": {
     "type": "git",

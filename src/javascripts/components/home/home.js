@@ -3,7 +3,7 @@ import utilities from '../../helpers/utilities';
 
 const printHome = () => {
   const domString = `<div id="home">
-    <h1 class="text-center">PINTEREST</h1>
+    <h1 class="text-center">PINT-E-REST</h1>
   </div>`;
 
   utilities.printToDom('home', domString);
