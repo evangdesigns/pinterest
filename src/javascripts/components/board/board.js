@@ -29,8 +29,10 @@ const addPin = (e) => {
 };
 
 const pinModal = (boardId) => {
-  const title = `Add A Pin to ${boardId}`;
-  const body = `<form>
+  boardData.editBoard(boardId)
+    .then((x) => {
+      const title = `Add A Pin to ${x.name}`;
+      const body = `<form>
     <div class="form-group">
       <label for="boardName">Board Name</label>
       <input type="text" class="form-control" id="pinName" placeholder="Enter Pin Name">
@@ -45,8 +47,10 @@ const pinModal = (boardId) => {
     </div>
   </form>
   <button type="button" class="btn btn-danger add-new-pin" id="${boardId}">ADD PIN</button>`;
-  utilities.printModal(title, body);
-  $(`#${boardId}`).click(addPin);
+      utilities.printModal(title, body);
+      $(`#${boardId}`).click(addPin);
+    })
+    .catch((error) => console.error(error));
 };
 
 const switchPin = (e) => {
@@ -107,18 +111,17 @@ const buildBoard = (boardId) => {
   boardDiv.removeClass('hide');
   boardDiv.add(`#${boardId}`);
   let domString = '';
-  boardData.getBoardById(boardId)
+  boardData.editBoard(boardId)
     .then((x) => {
-      domString += `<h1 class="text-center">${x.name}</h1>`;
-    });
-  domString += '<center><button type="link" class="btn btn-link add-pin" data-toggle="modal" data-target="#uniModal" id="add-pin">ADD PIN</button></center>';
-  domString += `<center>
-      <a href="/"class="btn btn-link go-back-boards">BACK TO BOARDS</a>
-    </center>
-    <div id="${boardId}" class="d-flex flex-wrap justify-content-center board-display">
+      domString += `<h1 class="text-center">${x.name.toUpperCase()}</h1>
+  <center>
+    <button type="link" class="btn btn-link add-pin" data-toggle="modal" data-target="#uniModal" id="add-pin">ADD PIN</button> | <a href="/"class="btn btn-link go-back-boards">BACK TO BOARDS</a>
+  </center>
   `;
+    });
   pinData.getPins(boardId)
     .then((pins) => {
+      domString += `<div id="${boardId}" class="d-flex flex-wrap justify-content-center board-display">`;
       pins.forEach((p) => {
         domString += pin.pinCard(p);
       });
