@@ -14,19 +14,19 @@ Pint-e-rest is a Pinterest-esk application that allows users to save images and 
 
 ## Screenshots
 Display on page load:
-![on load](#)
+![on load](https://github.com/evangdesigns/pinterest/blob/master/screenshots/home.png)
 
 Logged in display (User's Boards):
-![logged in](#)
+![logged in](https://github.com/evangdesigns/pinterest/blob/master/screenshots/boards.png)
 
 Individual Board View:
-![single board](#)
+![single board](https://github.com/evangdesigns/pinterest/blob/master/screenshots/boardsPage.png)
 
-Individual Pin View:
-![single pin](#)
+Move Pin View:
+![move pin](https://github.com/evangdesigns/pinterest/blob/master/screenshots/movePin.png)
 
-Add/Edit Pin Form:
-![create or edit pin](#)
+Add Pin Form:
+![add pin](https://github.com/evangdesigns/pinterest/blob/master/screenshots/addPin.png?raw=true)
 
 
 
