@@ -39,7 +39,7 @@ Add Pin Form:
 * In your browser, navigate to `https://localhost:8080`;
 
 ## Demo
-[Preview the app here!](#)
+[Preview the app here!](https://pinterest-dd90f.firebaseapp.com/)
 
 ## Contributors
 
